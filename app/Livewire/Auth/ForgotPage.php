@@ -3,13 +3,14 @@
 namespace App\Livewire\Auth;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Password;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
+#[Title('Forgot Password')]
 class ForgotPage extends Component
 {
     use LivewireAlert;
-
     public $email;
 
     public function forgot()

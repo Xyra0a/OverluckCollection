@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Cart;
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use App\Helpers\CartManagement;
 use App\Livewire\Partials\Navbar;
 use Illuminate\Support\Facades\Auth;
 
+#[Title('Cart - Overluck Collection')]
 class CartPage extends Component
 {
     public $cart_items = [];

@@ -12,7 +12,7 @@
               </svg>
               <svg class="hs-collapse-open:block hidden flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" /> 
+                <path d="m6 6 12 12" />
               </svg>
             </button>
           </div>
@@ -39,73 +39,28 @@
                 <span class="mr-1">Cart</span> <span class="py-0.5 px-1.5 rounded-full text-xs font-medium bg-blue-50 border border-blue-200 text-blue-600">{{ $total_count }}</span>
               </a>
 
-                        <!-- Icon Search -->
-            <div id="open-search" class="size-8 bg-slate-200 overflow-hidden flex items-center justify-center rounded-xl cursor-pointer hover:bg-slate-300 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="fill-slate-700">
-                <path d="M19.023 16.977a35.13 35.13 0 0 1-1.367-1.384c-.372-.378-.596-.653-.596-.653l-2.8-1.337A6.962 6.962 0 0 0 16 9c0-3.859-3.14-7-7-7S2 5.141 2 9s3.14 7 7 7c1.763 0 3.37-.66 4.603-1.739l1.337 2.8s.275.224.653.596c.387.363.896.854 1.384 1.367l1.358 1.392.604.646 2.121-2.121-.646-.604c-.379-.372-.885-.866-1.391-1.36zM9 14c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z"/>
-                </svg>
-            </div>
-
-                <!-- Modal Search -->
-            <div id="search-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center transition-opacity duration-300 ease-in-out transform scale-90 opacity-0 flex">
-                <div class="bg-white w-[90%] md:w-[600px] p-5 rounded-lg shadow-lg transform transition-transform scale-90">
-                <!-- Header -->
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold text-gray-700">Search Products</h2>
-                    <button id="close-search" class="text-red-500 font-bold text-xl">&times;</button>
-                </div>
-
-                <!-- Input Search -->
-                <input type="text" placeholder="Search..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-
-                <!-- Dummy Search Results -->
-                <div class="mt-4 space-y-3">
-                    <div class="flex items-center space-x-3 p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-md" alt="Product">
-                    <div>
-                        <h3 class="text-sm font-medium">Product Name 1</h3>
-                        <p class="text-xs text-gray-500">Rp 100.000</p>
-                    </div>
-                    </div>
-
-                    <div class="flex items-center space-x-3 p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-md" alt="Product">
-                    <div>
-                        <h3 class="text-sm font-medium">Product Name 2</h3>
-                        <p class="text-xs text-gray-500">Rp 200.000</p>
-                    </div>
-                    </div>
-
-                    <div class="flex items-center space-x-3 p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-md" alt="Product">
-                    <div>
-                        <h3 class="text-sm font-medium">Product Name 3</h3>
-                        <p class="text-xs text-gray-500">Rp 300.000</p>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
+              {{-- Search --}}
+         <div>
+            <livewire:search-products />
+         </div>
 
 
-                @guest
-                <div class="pt-3 md:pt-0">
-                    <a wire:navigate class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="/login">
-                    <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                    Log in
-                    </a>
-                </div>
-                @endguest
+              @guest
+              <div class="pt-3 md:pt-0">
+                  <a wire:navigate class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="/login">
+                  <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  Sign in
+                  </a>
+              </div>
+              @endguest
 
-                {{-- Wire:nagigate berfungsi untuk mengarahkan ke halaman yang diinginkan dari halaman yang sedang diakses oleh user (tanpa meload halaman yang diinginkan) --}}
-
-                @auth
-                    <div class="hs-dropdown [--strategy:static] md:[--strategy:fixed] [--adaptive:none]  md:py-4">
-                        <button type="button" class="flex items-center w-full text-gray-500 hover:text-gray-400 font-medium dark:text-gray-400 dark:hover:text-gray-500">
-                            {{ Auth::user()->name }}
+              @auth
+                  <div class="hs-dropdown [--strategy:static] md:[--strategy:fixed] [--adaptive:none]  md:py-4">
+                      <button type="button" class="flex items-center w-full text-gray-500 hover:text-gray-400 font-medium dark:text-gray-400 dark:hover:text-gray-500">
+                          {{ Auth::user()->name }}
                     <svg id="open-modal" class="ms-2 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m6 9 6 6 6-6" />
                     </svg>
@@ -116,7 +71,7 @@
                         My Orders
                         </a>
 
-                        <a href="/my-" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">
+                        <a href="{{ route('my-account') }}" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">
                         My Account
                         </a>
                         <a
@@ -126,49 +81,46 @@
                         </a>
 
                     </div>
-                    </div>
-                @endauth
+                  </div>
+              @endauth
 
             </div>
-            </div>
+          </div>
         </div>
-
-
-        </div>
+      </div>
     </nav>
 </header>
 
 <script>
-    // Buka modal
-    document.getElementById('open-modal').addEventListener('click', () => {
-        document.getElementById('modal').classList.remove('hidden');
-    });
+ document.addEventListener('livewire:load', function () {
+            Livewire.on('init-search', () => {
+                const openSearchBtn = document.getElementById('open-search');
+                const searchModal = document.getElementById('search-modal');
+                const closeSearchBtn = document.getElementById('close-search');
 
-    // Buka dan tutup search modal
-    const openSearchBtn = document.getElementById('open-search');
-    const searchModal = document.getElementById('search-modal');
-    const closeSearchBtn = document.getElementById('close-search');
+                if (openSearchBtn && searchModal && closeSearchBtn) {
+                    openSearchBtn.addEventListener('click', () => {
+                        searchModal.classList.remove('hidden');
+                        setTimeout(() => {
+                            searchModal.classList.remove('opacity-0', 'scale-90');
+                            searchModal.classList.add('opacity-100', 'scale-100');
+                        }, 10);
+                    });
 
-    openSearchBtn.addEventListener('click', () => {
-      searchModal.classList.remove('hidden');
-      setTimeout(() => {
-        searchModal.classList.remove('opacity-0', 'scale-90');
-        searchModal.classList.add('opacity-100', 'scale-100');
-      }, 10);
-    });
+                    closeSearchBtn.addEventListener('click', () => {
+                        searchModal.classList.remove('opacity-100', 'scale-100');
+                        searchModal.classList.add('opacity-0', 'scale-90');
+                        setTimeout(() => searchModal.classList.add('hidden'), 300);
+                    });
 
-    closeSearchBtn.addEventListener('click', () => {
-      searchModal.classList.remove('opacity-100', 'scale-100');
-      searchModal.classList.add('opacity-0', 'scale-90');
-      setTimeout(() => searchModal.classList.add('hidden'), 300);
-    });
-
-    // Tutup modal saat klik di luar modal
-    window.addEventListener('click', (e) => {
-      if (e.target === searchModal) {
-        searchModal.classList.remove('opacity-100', 'scale-100');
-        searchModal.classList.add('opacity-0', 'scale-90');
-        setTimeout(() => searchModal.classList.add('hidden'), 300);
-      }
-    });
+                    window.addEventListener('click', (e) => {
+                        if (e.target === searchModal) {
+                            searchModal.classList.remove('opacity-100', 'scale-100');
+                            searchModal.classList.add('opacity-0', 'scale-90');
+                            setTimeout(() => searchModal.classList.add('hidden'), 300);
+                        }
+                    });
+                }
+            });
+        });
 </script>

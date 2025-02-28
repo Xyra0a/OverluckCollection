@@ -5,12 +5,15 @@ namespace App\Livewire\Auth;
 use App\Models\Cart;
 use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Carbon;
+use Livewire\Attributes\Title;
 use App\Helpers\CartManagement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
+#[Title('Sign in to continue your shopping - Overluck Collection')]
 class LoginPage extends Component
 {
 
@@ -68,6 +71,10 @@ class LoginPage extends Component
 
             // $google_user = Socialite::driver('google')->user();
             $google_user =  Socialite::driver('google')->user();
+
+            if (!$google_user->getId()) {
+                return redirect()->route('login')->with('error', 'Google ID tidak ditemukan.');
+            }
             $user = User::where('google_id', $google_user->getId())->first();
             // dd($google_user->getId(), $user);
             if (!$user) {
@@ -77,6 +84,7 @@ class LoginPage extends Component
                     // Jika user dengan email yang sama sudah ada, update google_id
                     $user->update([
                         'google_id' => $google_user->getId(),
+                        'email_verified_at' => $user->email_verified_at ?? Carbon::now(), // Tandai sebagai verified jika belum
                     ]);
                 } else {
                     // Jika benar-benar user baru, buat akun baru
@@ -84,6 +92,7 @@ class LoginPage extends Component
                         'name' => $google_user->getName(),
                         'email' => $google_user->getEmail(),
                         'google_id' => $google_user->getId(),
+                        'email_verified_at' => Carbon::now(),
                     ]);
                 }
             }

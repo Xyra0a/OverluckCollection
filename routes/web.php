@@ -2,8 +2,10 @@
 
 use App\Livewire\CartPage;
 use App\Livewire\HomePage;
+use App\Livewire\MyAccount;
 use App\Filament\Auth\Login;
 use App\Livewire\CancelPage;
+use Illuminate\Http\Request;
 use App\Livewire\MyOrderPage;
 use App\Livewire\ProductPage;
 use App\Livewire\SuccessPage;
@@ -15,11 +17,13 @@ use App\Livewire\Auth\ForgotPage;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\MyOrderDetailPage;
 use App\Livewire\ProductDetailPage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\GoogleAuthController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +45,10 @@ Route::get('/cart', CartPage::class);
 
 // // Auth
 
+Auth::routes([
+    'verify' => true
+]);
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', LoginPage::class)->name('login');
     Route::get('/register', RegisterPage::class)->name('register');
@@ -49,13 +57,29 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/google', [LoginPage::class, 'goTo'])->name('google.login');
     Route::get('auth/google/call-back', [LoginPage::class, 'callback'])->name('google.callback');
 });
+// Route::get('/email/verify', function () {
+//     return view('auth.verify-email');
+// })->middleware('auth')->name('verification.notice');
+
+// Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+//     $request->fulfill();
+
+//     return redirect('/home');
+// })->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Route::post('/email/verification-notification', function (Request $request) {
+//     $request->user()->sendEmailVerificationNotification();
+
+//     return back()->with('message', 'Verification link sent!');
+// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 // Auth Protected
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','verified')->group(function () {
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/checkout', CheckOutPage::class)->name('checkout');
     Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification'])->name('notification');
     // Route::post('/midtrans/webhook', [PaymentController::class, 'handleWebhook']);
+    Route::get('/my-account', MyAccount::class)->name('my-account');
     Route::get('/my-orders', MyOrderPage::class);
     Route::get('/my-orders/{order}', MyOrderDetailPage::class);
     Route::get('/success', SuccessPage::class)->name('checkout.success');

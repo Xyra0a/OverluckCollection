@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Models\Categories;
 use Livewire\Component;
+use App\Models\Categories;
+use Livewire\Attributes\Title;
 
+#[Title('Categories Product - Overluck Collection')]
 class CategoriesPage extends Component
 {
     public function render()

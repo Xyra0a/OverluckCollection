@@ -15,7 +15,7 @@ use App\Livewire\Partials\Navbar;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-#[Title('Products - Page')]
+#[Title('Products - Overluck Collection')]
 class ProductPage extends Component
 {
     use WithPagination;

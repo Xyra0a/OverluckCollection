@@ -4,10 +4,13 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use App\Helpers\CartManagement;
 use App\Livewire\Partials\Navbar;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
+#[Title('Detail Product - Overluck Collection')]
 class ProductDetailPage extends Component
 {
     use LivewireAlert;
@@ -22,15 +25,37 @@ class ProductDetailPage extends Component
     }
 
     public function addToCart($product_id){
-        $total_count = CartManagement::addCartItemToCart($product_id);
+        // Cek apakah user sudah login
+    if (!Auth::check()) {
+        session()->flash('error', 'You must login first to add items to cart.');
+        return redirect()->route('login', [
+            'redirect' => url()->current() // Simpan URL saat ini
+        ]);
+    }
 
-        $this->dispatch('update-cart-count',  total_count: $total_count)->to(Navbar::class);
+    // Tambahkan produk ke keranjang
+    $message = CartManagement::addCartItemToCart($product_id);
 
-        $this->alert('success', 'Product added to cart',[
+    // Jika produk sudah ada di keranjang, tampilkan pesan error
+    if ($message === 'Product Already in Cart') {
+        $this->alert('error', 'Product is already in your cart', [
             'position' => 'bottom-end',
             'timer' => 3000,
             'toast' => true
         ]);
+        return;
+    }
+
+    // Jika produk berhasil ditambahkan, tampilkan pesan sukses
+    $this->alert('success', 'Product added to cart', [
+        'position' => 'bottom-end',
+        'timer' => 3000,
+        'toast' => true
+    ]);
+
+    // Perbarui jumlah item di keranjang
+    $total_count = CartManagement::getCartCount();
+    $this->dispatch('update-cart-count', total_count: $total_count)->to(Navbar::class);
     }
 
     public function render()
