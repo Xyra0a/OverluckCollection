@@ -46,7 +46,7 @@ class OrderResource extends Resource
 
     protected static ?string $navigationLabel = 'Orders';
 
-    protected static ?string $navigationGroup = 'Orders';
+    protected static ?string $navigationGroup = 'Shopping';
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
@@ -213,7 +213,7 @@ class OrderResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                
+
             ])
             ->actions([
                 ActionGroup::make([

@@ -3,97 +3,130 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Helpers\CartManagement;
 use Illuminate\Support\Facades\Log;
 
 class MidtransController extends Controller
 {
-    public function handleNotification(Request $request)
+    public function __invoke(Request $request)
     {
-       // Mengambil konfigurasi Server Key
-        $serverKey = config('midtrans.server_key');
+        $payload = $request->all();
 
-        // Validasi signature key dari Midtrans
-        $signatureKey = hash("sha512",
-            $request->order_id .
-            $request->status_code .
-            $request->gross_amount .
-            $serverKey
-        );
+        Log::info('Incoming midtrans', [
+            'payload' => $payload
+        ]);
 
-        if ($signatureKey !== $request->signature_key) {
-            return response()->json(['message' => 'Invalid signature key'], 403);
+        $orderId = $payload['order_id'];
+        $statusCode = $payload['status_code'];
+        $grossAmount = $payload['gross_amount'];
+
+        $reqSignature = $payload['signature_key'];
+        $signature = hash('sha512', $orderId . $statusCode . $grossAmount . config('midtrans.serverKey'));
+
+        if($signature !== $reqSignature) {
+            return response()->json([
+                'message' => 'Invalid signature key'
+            ], 401);
         }
 
-        // Cek status transaksi
-        $order = Order::find($request->order_id);
+        $transactionStatus = $payload['transaction_status'];
+        $order = Order::find($orderId);
 
-        if (!$order) {
-            return response()->json(['message' => 'Transaction not found'], 404);
+        if(!$order) {
+            return response()->json([
+                'message' => 'Order not found'
+            ], 404);
         }
 
-        if ($request->transaction_status == 'settlement' || $request->transaction_status == 'capture') {
-            $order->status = 'paid'; // Status pembayaran berhasil
-        } elseif ($request->transaction_status == 'cancel' || $request->transaction_status == 'expire') {
-            $order->status = 'failed'; // Status pembayaran gagal atau kadaluarsa
-        } elseif ($request->transaction_status == 'pending') {
-            $order->status = 'pending'; // Status menunggu pembayaran
+        if ($transactionStatus === 'settlement') {
+            $order->status = 'settl ement';
+            $order->payment_type = $payload['payment_type'];
+            $order->acquirer = $payload['acquirer'] ?? null;
+
+            // Pastikan bank dan va_number diambil dari va_numbers jika payment_type adalah bank_transfer
+            if ($order->payment_type === 'bank_transfer' && isset($payload['va_numbers'][0])) {
+                $order->bank = $payload['va_numbers'][0]['bank'] ?? null;
+                $order->va_number = $payload['va_numbers'][0]['va_number'] ?? null;
+            } else {
+                $order->bank = $payload['bank'] ?? null;
+                $order->va_number = $payload['va_number'] ?? null;
+            }
+
+            CartManagement::removeItemsByOrder($order->id);
+            $order->save();
+            Log::info('Order saved', ['bank' => $order->bank, 'va_number' => $order->va_number]);
+        } else if ($transactionStatus === 'expire') {
+            $order->status = 'expired';
+            $order->save();
         }
 
-        $order->save();
+          // $order->va_number = isset($payload['va_numbers'][0]['va_number']) ? $payload['va_numbers'][0]['va_number'] : 'Tidak menggunakan pembayaran dengan metode ini';
+            // $order->bank = isset($payload['bank']) ? $payload['bank'] : 'Tidak menggunakan pembayaran dengan metode ini';
 
-        return response()->json(['message' => 'Webhook processed successfully']);
+        return response()->json([
+            'message' => 'Success'
+        ], 200);
+
     }
+    // public function handleNotification(Request $request)
+    // {
+    //     Log::info('Midtrans Notification Received:', $request->all());
+
+    //     // Ambil konfigurasi Server Key dari .env
+    //     $serverKey = config('midtrans.server_key');
+
+    //     // Validasi signature key dari Midtrans
+    //     $calculatedSignatureKey = hash("sha512",
+    //         $request->order_id .
+    //         $request->status_code .
+    //         $request->gross_amount .
+    //         $serverKey
+    //     );
+    //     dd($calculatedSignatureKey);
+
+    //     if ($calculatedSignatureKey !== $request->signature_key) {
+    //         Log::error('Invalid signature key detected');
+    //         abort(403, 'Invalid signature key');
+    //     }
+
+    //     // Cari order berdasarkan order_id
+    //     $order = Order::where('id', $request->order_id)->first();
+
+    //     if (!$order) {
+    //         Log::error('Order not found for ID: ' . $request->order_id);
+    //         return response()->json(['message' => 'Transaction not found'], 404);
+    //     }
+
+    //     // Update status berdasarkan status transaksi Midtrans
+    //     $midtransStatus = $request->transaction_status;
+
+    //     switch ($midtransStatus) {
+    //         case 'settlement':
+    //         case 'capture':
+    //             $order->status = 'settlement'; // Sesuai dengan ENUM di tabel
+    //             break;
+    //         case 'pending':
+    //             $order->status = 'pending';
+    //             break;
+    //         case 'expire':
+    //             $order->status = 'expired';
+    //             break;
+    //         case 'cancel':
+    //         case 'deny':
+    //             $order->status = 'failed';
+    //             break;
+    //         default:
+    //             Log::warning("Unknown Midtrans status: $midtransStatus");
+    //             return response()->json(['message' => 'Unknown transaction status'], 400);
+    //     }
+
+    //     $order->save();
+
+    //     Log::info("Order ID: {$order->id} updated to status: {$order->status}");
+
+    //     return response()->json(['message' => 'Webhook processed successfully']);
+    // }
 }
-
-/*
-
-        Log::info('Midtrans Notification Received:', $payload);
-
-        // Validasi signature key (opsional, untuk keamanan)
-        $validSignatureKey = hash('sha512', $payload['order_id'] . $payload['status_code'] . $payload['gross_amount'] . config('services.midtrans.server_key'));
-
-        if ($payload['signature_key'] !== $validSignatureKey) {
-            return response()->json(['message' => 'Invalid signature key'], 403);
-        }
-
-        // Cari order berdasarkan order_id
-        $order = Order::where('id', $payload['order_id'])->first();
-
-        if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
-
-        // Update status pembayaran dan payment_type berdasarkan transaction_status
-        switch ($payload['transaction_status']) {
-            case 'capture':
-            case 'settlement':
-                $order->update([
-                    'status' => 'success', // Sesuaikan dengan nilai enum yang baru
-                    'payment_type' => $payload['payment_type'], // Simpan metode pembayaran
-                ]);
-                break;
-            case 'pending':
-                $order->update([
-                    'status' => 'pending',
-                    'payment_type' => $payload['payment_type'], // Simpan metode pembayaran
-                ]);
-                break;
-            case 'deny':
-            case 'expire':
-            case 'cancel':
-                $order->update([
-                    'status' => 'failed', // Sesuaikan dengan nilai enum yang baru
-                    'payment_type' => $payload['payment_type'], // Simpan metode pembayaran
-                ]);
-                break;
-            default:
-                // Tidak perlu update jika status tidak dikenali
-                break;
-        }
-
-        return response()->json(['message' => 'Notification handled successfully']);
-    }
-*/
-

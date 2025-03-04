@@ -20,38 +20,7 @@
                     @endforeach
                     </ul>
             </div>
-            {{-- Categories End --}}
 
-            {{-- Brands Start --}}
-            {{-- <div class="p-4 mb-5 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-900">
-                <h2 class="text-2xl font-bold dark:text-gray-400">Sort</h2>
-                <div class="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
-                @foreach ($brands as $brand)
-                    <ul>
-                        <li class="mb-4" wire:key="{{ $brand->id }}">
-                        <label for="{{ $brand->slug }}" class="flex items-center dark:text-gray-300">
-                            <input type="checkbox" class="w-4 h-4 mr-2" id="{{ $brand->slug }}" value="{{ $brand->id }}">
-                            <span class="text-lg dark:text-gray-400">{{ $brand->name }}</span>
-                        </label>
-                        </li>
-                    </ul>
-                @endforeach
-            </div> --}}
-            {{-- Brands End --}}
-
-
-            {{-- <div class="p-4 mb-5 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-900">
-              <h2 class="text-2xl font-bold dark:text-gray-400">Price</h2>
-              <div class="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
-              <div>
-                <div class="mb-2 text-lg font-semibold">{{ Number::currency($price_range, 'IDR') }}</div>
-                <input type="range" wire:mode.live = "price_range" class="w-full h-1 mb-4 bg-blue-100 rounded appearance-none cursor-pointer" max="500000" value="300000" step="100000">
-                <div class="flex justify-between ">
-                  <span class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(100000, 'IDR') }}</span>
-                  <span class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(500000, 'IDR') }}</span>
-                </div>
-              </div>
-            </div> --}}
           </div>
           <div class="w-full px-3 lg:w-3/4">
             <div class="px-3 mb-4">
@@ -108,3 +77,37 @@
     </section>
 
   </div>
+
+
+              {{-- Categories End --}}
+
+            {{-- Brands Start --}}
+            {{-- <div class="p-4 mb-5 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-900">
+                <h2 class="text-2xl font-bold dark:text-gray-400">Sort</h2>
+                <div class="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
+                @foreach ($brands as $brand)
+                    <ul>
+                        <li class="mb-4" wire:key="{{ $brand->id }}">
+                        <label for="{{ $brand->slug }}" class="flex items-center dark:text-gray-300">
+                            <input type="checkbox" class="w-4 h-4 mr-2" id="{{ $brand->slug }}" value="{{ $brand->id }}">
+                            <span class="text-lg dark:text-gray-400">{{ $brand->name }}</span>
+                        </label>
+                        </li>
+                    </ul>
+                @endforeach
+            </div> --}}
+            {{-- Brands End --}}
+
+
+            {{-- <div class="p-4 mb-5 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-900">
+              <h2 class="text-2xl font-bold dark:text-gray-400">Price</h2>
+              <div class="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
+              <div>
+                <div class="mb-2 text-lg font-semibold">{{ Number::currency($price_range, 'IDR') }}</div>
+                <input type="range" wire:mode.live = "price_range" class="w-full h-1 mb-4 bg-blue-100 rounded appearance-none cursor-pointer" max="500000" value="300000" step="100000">
+                <div class="flex justify-between ">
+                  <span class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(100000, 'IDR') }}</span>
+                  <span class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(500000, 'IDR') }}</span>
+                </div>
+              </div>
+            </div> --}}

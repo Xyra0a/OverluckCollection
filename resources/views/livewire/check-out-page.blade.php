@@ -50,30 +50,52 @@
                 </div>
             </div>
 
-            <!-- Payment Button -->
-            <button type="button" class="bg-green-500 mt-4 w-full p-3 rounded-lg text-lg text-white hover:bg-green-600" id="pay-button">
-                Place Order
-            </button>
+            <div>
+                <!-- Tombol Buat Pesanan -->
+                @if(!$snap_token)
+                    <button wire:click="createOrder"
+                            wire:loading.attr="disabled"
+                            class="bg-green-500 mt-4 w-full p-3 rounded-lg text-lg text-white hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                        <span wire:loading.remove>Place Order</span>
+                        <span wire:loading>Processing...</span>
+                    </button>
+                @else
+                    <!-- Tombol Lanjutkan Pembayaran -->
+                    <input type="hidden" id="snap-token" wire:model="snap_token">
+                    <button type="submit" id="pay-button" onclick="triggerSnapPayment()"
+                            class="bg-blue-500 mt-4 w-full p-3 rounded-lg text-lg text-white hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+                        Lanjutkan Pembayaran
+                    </button>
+                @endif
+            </div>
         </div>
     </div>
 </div>
 
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
-<script type="text/javascript">
-    document.getElementById('pay-button').onclick = function () {
-        // var resultType = document.getElementById('result-type');
-
-        snap.pay('{{ $snap_token }}', {
-            onSuccess: function(result) {
-                console.log(result);
-                window.location.href = '/success';
-            },
-            onPending: function(result) {
-                resultType.innerHTML = 'Result: ' + result.status;
-            },
-            onError: function(result) {
-                resultType.innerHTML = 'Result: ' + result.status;
-            }
-        });
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+<script>
+function triggerSnapPayment() {
+    let snapToken = document.getElementById("snap-token").value;
+    if (!snapToken) {
+        alert("Snap Token belum tersedia. Silakan coba lagi.");
+        return;
     }
+
+    snap.pay(snapToken, {
+        onSuccess: function(result) {
+            console.log("Payment Success:", result);
+            window.location.href = "/success/" + result.order_id;
+        },
+        onPending: function(result) {
+            console.log("Payment Pending:", result);
+            alert("Pembayaran masih pending, silakan selesaikan pembayaran.");
+        },
+        onError: function(result) {
+            console.log("Payment Error:", result);
+            alert("Terjadi kesalahan dalam pembayaran. Silakan coba lagi.");
+        }
+    });
+}
+
 </script>
+

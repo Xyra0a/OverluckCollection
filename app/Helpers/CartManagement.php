@@ -4,11 +4,24 @@ namespace App\Helpers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
 class CartManagement
 {
+
+    public static function removeItemsByOrder($order_id)
+    {
+        // Ambil semua product_id dalam order
+        $productIds = OrderItem::where('order_id', $order_id)->pluck('product_id');
+
+        // Hapus semua produk dari cart berdasarkan product_id
+        Cart::whereIn('product_id', $productIds)->delete();
+        // Product::whereIn('id', $productIds)->update(['in_stock' => 0]);
+    }
+
+
     // add item to cart
     static public function addCartItemToCart($product_id)
 {

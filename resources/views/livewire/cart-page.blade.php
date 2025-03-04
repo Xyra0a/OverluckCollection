@@ -52,18 +52,19 @@
                     <h2 class="text-lg font-semibold mb-4">Summary</h2>
                     <div class="flex justify-between mb-2">
                         <span>Subtotal</span>
-                        <span>{{ Number::currency($grand_total, 'IDR') }}</span>
-                    </div>
-                    <div class="flex justify-between mb-2">
-                        <span>Taxes (11%)</span>
-                        <span>{{ Number::currency($grand_total * 0.11, 'IDR') }}</span>
-                    </div>
-                    <hr class="my-2">
-                    <div class="flex justify-between mb-2">
-                        <span class="font-semibold">Grand Total</span>
-                        <span class="font-semibold">{{ Number::currency($grand_total + ($grand_total * 0.11), 'IDR') }}</span>
+                        <span>{{ Number::currency($grand_total, 'IDR' ? : 'You dont have any item') }}</span>
                     </div>
                     @if ($cart_items)
+                        <div class="flex justify-between mb-2">
+                            <span>Taxes (11%)</span>
+                            <span>{{ Number::currency($grand_total * 0.11, 'IDR') }}</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold">Grand Total</span>
+                            <span class="font-semibold">{{ Number::currency($grand_total + ($grand_total * 0.11), 'IDR') }}</span>
+                        </div>
+
                         <a wire:navigate href="/checkout" class="bg-blue-500 block text-center text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</a>
                     @endif
                 </div>

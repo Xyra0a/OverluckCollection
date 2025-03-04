@@ -19,7 +19,9 @@ class Order extends Model
         'status',
         'notes',
         'snap_token',
-        'currency'
+        'currency',
+        'payment_type',
+        'acquirer'
     ];
 
     public function user(): BelongsTo

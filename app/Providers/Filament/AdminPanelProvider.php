@@ -4,6 +4,9 @@ namespace App\Providers\Filament;
 
 use App\Filament\Auth\CustomLogin;
 use App\Filament\Resources\OrderResource\Widgets\OrderStats;
+use App\Filament\Widgets\UserChart;
+use App\Filament\Widgets\LatestOrders;
+use App\Models\User;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,6 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(CustomLogin::class) //pake custom login
             ->authGuard('admin')
+            // ->brandLogo('/assets/img/iconWeb.jpg')
+            // ->brandLogoHeight('3rem')
+            ->brandName('Overluck Collection')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => 'rgb(44,62,148)',
@@ -42,10 +48,11 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 OrderStats::class,
+                UserChart::class,
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
-            ->middleware([
+            ->middleware ([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -60,5 +67,10 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->viteTheme('resources/css/filament/admin/theme.css');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug', 'author.name', 'category.name'];
     }
 }

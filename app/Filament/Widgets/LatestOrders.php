@@ -12,7 +12,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class LatestOrders extends BaseWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
 
     protected int | string | array $columnSpan = 'full';
     public function table(Table $table): Table
@@ -41,11 +41,13 @@ class LatestOrders extends BaseWidget
                     'pending' => 'info',
                     'settlement' => 'success',
                     'failed' => 'danger',
+                    'expired' => 'danger',
                 })
                 ->icon(fn (string $state) => match ($state) {
                     'pending' => 'heroicon-m-arrow-path',
-                    'success' => 'heroicon-m-check',
+                    'settlement' => 'heroicon-m-check',
                     'failed' => 'heroicon-m-x-circle',
+                    'expired' => 'heroicon-m-x-circle',
                 })
                 ->sortable(),
 

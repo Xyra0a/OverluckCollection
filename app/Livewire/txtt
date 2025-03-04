@@ -8,52 +8,61 @@ use App\Models\Order;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\OrderItem;
+use Illuminate\Http\Request;
+use App\Services\OrderService;
 use App\Helpers\CartManagement;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class CheckOutPage extends Component
 {
     public $items = [];
     public $grand_total = 0;
-    public $snap_token = null;
+    public $snap_token;
     public $order_id;
-    public $isProcessing = false;
-    public $order;
 
     protected $listeners = ['paymentProcessed'];
 
     public function mount()
     {
-        // Load cart items dan total
-        $this->items = CartManagement::getCartItems();
-        $this->grand_total = CartManagement::calculateCartTotalAmount($this->items);
+        $this->loadCartItems();
     }
 
-    public function createOrder()
+    public function loadCartItems()
     {
-        $this->isProcessing = true;
+        $this->items = CartManagement::getCartItems();
+        $this->grand_total = CartManagement::calculateCartTotalAmount($this->items);
 
-        // Pastikan keranjang tidak kosong
         if (empty($this->items)) {
             session()->flash('error', 'Your cart is empty');
             return;
         }
+    }
 
-        // Konfigurasi Midtrans
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$isProduction = false;
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+    public function createOrder()
+    {
+        $order = $this->createOrderRecord();
+        $this->createOrderItems($order);
 
-        // Buat order
-        $order = Order::create([
+        $this->snap_token = $this->generateSnapToken($order);
+        $order->update(['snap_token' => $this->snap_token]);
+
+        $this->dispatchBrowserEvent('snap-payment', ['snap_token' => $this->snap_token]);
+        session()->flash('success', 'Order created successfully. Please proceed with payment.');
+    }
+
+    protected function createOrderRecord()
+    {
+        return Order::create([
             'user_id' => Auth::id(),
             'grand_total' => $this->grand_total + ($this->grand_total * 0.11),
             'status' => 'pending',
         ]);
+    }
 
-        // Simpan detail item ke tabel order_items
+    protected function createOrderItems($order)
+    {
         foreach ($this->items as $item) {
             $product = Product::find($item['product_id']);
 
@@ -66,13 +75,20 @@ class CheckOutPage extends Component
                 'order_id' => $order->id,
                 'product_id' => $product->id,
                 'product_name' => $product->name,
-                'unit_amount' => $this->grand_total,
+                'unit_amount' => $item['unit_amount'],
                 'taxes' => $this->grand_total * 0.11,
                 'total_amount' => $this->grand_total + ($this->grand_total * 0.11),
             ]);
         }
+    }
 
-        // Siapkan parameter pembayaran untuk Midtrans
+    protected function generateSnapToken($order)
+    {
+        \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
         $params = [
             'transaction_details' => [
                 'order_id' => $order->id,
@@ -82,43 +98,23 @@ class CheckOutPage extends Component
                 'first_name' => Auth::user()->name,
                 'email' => Auth::user()->email,
             ],
-            
         ];
 
         try {
-            // Generate Snap Token
-            $snapToken = Snap::getSnapToken($params);
-
-            // Update order dengan Snap Token
-            $order->update([
-                'snap_token' => $snapToken,
-            ]);
-
-            // Simpan snap token untuk Livewire
-            $this->snap_token = $snapToken;
-
-            // Kirim event ke browser agar Midtrans Snap muncul
-            $this->dispatchBrowserEvent('snap-payment', ['snap_token' => $snapToken]);
-            // $this->emit('$refresh');
-
-            session()->flash('success', 'Order created successfully. Please proceed with payment.');
-            return redirect()->to("/success/{$order->id}");
+            return \Midtrans\Snap::getSnapToken($params);
         } catch (\Exception $e) {
             Log::error('Midtrans Error: ' . $e->getMessage());
             session()->flash('error', 'Payment processing error: ' . $e->getMessage());
+            return null;
         }
-
-        $this->isProcessing = false;
     }
+
 
     public function render()
     {
-        return view('livewire.check-out-page',[
-            'order' => Order::find($this->order_id)
-        ]);
+        return view('livewire.check-out-page');
     }
 }
-
  // public function processCheckout()
     // {
     //     if (empty($this->items)) {

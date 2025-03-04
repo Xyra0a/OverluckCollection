@@ -57,6 +57,21 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/google', [LoginPage::class, 'goTo'])->name('google.login');
     Route::get('auth/google/call-back', [LoginPage::class, 'callback'])->name('google.callback');
 });
+
+// Auth Protected
+Route::middleware('auth','verified')->group(function () {
+    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::get('/checkout', CheckOutPage::class)->name('checkout');
+    Route::post('/generate-snap-token', [PaymentController::class, 'generateSnapToken']);
+
+    Route::get('/my-account', MyAccount::class)->name('my-account');
+    Route::get('/my-orders', MyOrderPage::class);
+    Route::get('/my-orders/{order}', MyOrderDetailPage::class);
+    Route::get('/success/{id}', SuccessPage::class)->name('success');
+    Route::get('/cancel', CancelPage::class)->name('checkout.cancel');
+});
+
+
 // Route::get('/email/verify', function () {
 //     return view('auth.verify-email');
 // })->middleware('auth')->name('verification.notice');
@@ -72,27 +87,3 @@ Route::middleware('guest')->group(function () {
 
 //     return back()->with('message', 'Verification link sent!');
 // })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-// Auth Protected
-Route::middleware('auth','verified')->group(function () {
-    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
-    Route::get('/checkout', CheckOutPage::class)->name('checkout');
-    Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification'])->name('notification');
-    // Route::post('/midtrans/webhook', [PaymentController::class, 'handleWebhook']);
-    Route::get('/my-account', MyAccount::class)->name('my-account');
-    Route::get('/my-orders', MyOrderPage::class);
-    Route::get('/my-orders/{order}', MyOrderDetailPage::class);
-    Route::get('/success', SuccessPage::class)->name('checkout.success');
-    Route::get('/cancel', CancelPage::class)->name('checkout.cancel');
-});
-
-// Route::prefix('checkout')->group(function () {
-//     Route::get('/success/{transaction}', [PaymentController::class, 'success'])
-//         ->name('checkout.success');
-
-    // Route::get('/pending/{transaction}', [PaymentController::class, 'pending'])
-    //     ->name('checkout.pending');
-
-//     Route::get('/error/{transaction}', [PaymentController::class, 'error'])
-//         ->name('checkout.error');
-// });

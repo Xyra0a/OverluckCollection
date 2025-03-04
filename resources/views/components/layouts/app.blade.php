@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
+    <head>
+    {{-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://app.sandbox.midtrans.com"> --}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -9,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles()
 </head>
-<body class="bg-slate-200 dark:bg-slate-700">
+<body class="bg-slate-200 dark:bg-slate-700 flex flex-col min-h-screen">
     @livewire('partials.navbar')
     <main>
         {{ $slot }}
