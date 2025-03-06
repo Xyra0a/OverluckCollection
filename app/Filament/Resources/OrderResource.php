@@ -80,16 +80,19 @@ class OrderResource extends Resource
                                 'pending' => 'Pending',
                                 'settlement' => 'Settlement',
                                 'failed' => 'Failed',
+                                'expired' => 'Expired',
                             ])
                             ->colors([
                                 'pending' => 'info',
                                 'settlement' => 'success',
                                 'failed' => 'danger',
+                                'expired' => 'danger',
                             ])
                             ->icons([
                                 'pending' => 'heroicon-m-arrow-path',
                                 'success' => 'heroicon-m-check',
                                 'failed' => 'heroicon-m-x-circle',
+                                'expired' => 'heroicon-m-x-circle',
                             ]),
 
 
@@ -179,9 +182,13 @@ class OrderResource extends Resource
                 ->sortable()
                 ->money('IDR'),
 
-            TextColumn::make('notes')
-                ->sortable()
-                ->searchable(),
+            // TextColumn::make('notes')
+            //     ->sortable()
+            //     ->searchable(),
+
+            // TextColumn::make('notes')
+            //     ->sortable()
+            //     ->searchable(),
 
             SelectColumn::make('status')
                 ->options([

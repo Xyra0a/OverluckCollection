@@ -23,6 +23,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Livewire\MyAccountPage;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -64,7 +65,7 @@ Route::middleware('auth','verified')->group(function () {
     Route::get('/checkout', CheckOutPage::class)->name('checkout');
     Route::post('/generate-snap-token', [PaymentController::class, 'generateSnapToken']);
 
-    Route::get('/my-account', MyAccount::class)->name('my-account');
+    Route::get('/my-account', MyAccountPage::class)->name('my-account');
     Route::get('/my-orders', MyOrderPage::class);
     Route::get('/my-orders/{order}', MyOrderDetailPage::class);
     Route::get('/success/{id}', SuccessPage::class)->name('success');
