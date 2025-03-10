@@ -18,7 +18,7 @@ class CartManagement
 
         // Hapus semua produk dari cart berdasarkan product_id
         Cart::whereIn('product_id', $productIds)->delete();
-        // Product::whereIn('id', $productIds)->update(['in_stock' => 0]);
+        Product::whereIn('id', $productIds)->update(['in_stock' => 0]);
     }
 
 

@@ -21,10 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\MidtransController;
-use App\Http\Controllers\GoogleAuthController;
 use App\Livewire\MyAccountPage;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------

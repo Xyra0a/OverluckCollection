@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             // ->brandLogo('/assets/img/iconWeb.jpg')
             // ->brandLogoHeight('3rem')
+            ->favicon('assets/img/iconWeb.jpg')
             ->brandName('Overluck Collection')
             ->sidebarCollapsibleOnDesktop()
             ->colors([

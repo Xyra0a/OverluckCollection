@@ -42,7 +42,7 @@ class MidtransController extends Controller
         }
 
         if ($transactionStatus === 'settlement') {
-            $order->status = 'settl ement';
+            $order->status = 'settlement';
             $order->payment_type = $payload['payment_type'];
             $order->acquirer = $payload['acquirer'] ?? null;
 

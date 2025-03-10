@@ -1,19 +1,16 @@
 <div>
-
-    <section class="w-full h-[400px] flex items-center justify-center overflow-hidden bg-[url('{{ asset('../../') }}')] bg-cover py-10 max-[660px]:h-auto">
-      <div class="w-[80%] h-full bg-white flex rounded-2xl max-[660px]:flex-col">
-        <div class="w-[50%] h-full flex flex-col items-start justify-end rounded-2xl p-10 max-[660px]:w-full">
-          <h1 class="font-bold text-3xl text-[#384B70]">Overluck Collection</h1>
-          <p class="font-medium text-[#384B70]">sell many designs of hoodie , shirt and others</p>
+    <section class="w-full h-[500px] flex items-center justify-center overflow-hidden py-10 max-[660px]:h-auto">
+        <div class="w-[80%] h-full bg-white flex rounded-2xl max-[660px]:flex-col bg-[url('http://127.0.0.1:8000/assets/img/bg-home-hd.png')] bg-center bg-cover">
+            <div class="w-[50%] h-full flex flex-col items-start justify-end rounded-2xl p-10 max-[660px]:w-full">
+                <h1 class="font-bold text-3xl text-[#384B70]">Overluck Collection</h1>
+                <p class="font-medium text-[#384B70]">Sell many designs of hoodie, shirt and others</p>
+            </div>
+            <div class="w-[50%] h-full flex justify-end items-end p-10 max-[660px]:w-full max-[660px]:justify-start">
+                <button class="w    -24 h-10 bg-[#F8E1B7] rounded-xl">
+                    <a href="{{ route('products') }}" class="text-[#384B70] font-medium">Buy Now</a>
+                </button>
+            </div>
         </div>
-        <div class="w-[50%] h-full flex justify-end items-end p-10 max-[660px]:w-full max-[660px]:justify-start">
-          <button class="w-24 h-10 bg-[#F8E1B7] rounded-xl">
-            <a href="" class="text-[#384B70] font-medium">
-              Buy Now
-            </a>
-          </button>
-        </div>
-      </div>
     </section>
 
     <div class="w-full h-[450px] flex flex-col items-center max-[770px]:h-auto">

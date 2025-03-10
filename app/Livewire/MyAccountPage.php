@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class MyAccountPage extends Component
+class MyAccountPage extends Component   
 {
     public function render()
     {

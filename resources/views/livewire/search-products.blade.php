@@ -28,7 +28,8 @@
                     @foreach ($results as $result)
                         <a href="/products/{{ $result->slug }}">
                             <div class="flex items-center space-x-3 p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition cursor-pointer">
-                                <img src="{{ url('storage/', $result->images[0]) }}" class="w-12 h-12 rounded-md" alt="Product">
+                                <img src="{{ isset($result->images[0]) ? url('storage/', $result->images[0]) : asset('default-image.png') }}"
+                                class="w-12 h-12 rounded-md" alt="Product">
                                 <div>
                                     <h3 class="text-sm font-medium">{{ $result->name }}</h3>
                                     @if ($result instanceof \App\Models\Product)

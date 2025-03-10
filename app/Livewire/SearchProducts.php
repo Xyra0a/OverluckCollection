@@ -23,12 +23,14 @@ class SearchProducts extends Component
             $products = Product::where('name', 'like', '%' . $value . '%')->get();
             $categories = Categories::where('name', 'like', '%' . $value . '%')->get();
 
-            $this->results = $products->concat($categories);
+            // Mengambil produk yang sesuai dengan kategori yang ditemukan
+            $categoryProducts = Product::whereIn('category_id', $categories->pluck('id'))->get();
+
+            $this->results = $products->merge($categoryProducts);
         } else {
             $this->results = [];
         }
     }
-
 
     public function render()
     {
